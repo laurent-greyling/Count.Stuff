@@ -16,8 +16,16 @@
     <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\NotifyTaskCompletion.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Services\CreateSqliteTable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\ICreateSqliteTable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\IRestCall.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\ISqlite.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\ISqliteService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\RestCall.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\SqliteService.cs" />
   </ItemGroup>
 </Project>

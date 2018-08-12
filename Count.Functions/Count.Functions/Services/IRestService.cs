@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 
-namespace Count.Stuff.Services
+namespace Count.Functions.Services
 {
-    interface IRestCall
+    public interface IRestService
     {
         /// <summary>
         /// Does Get call to the API service and return Json string to be deserialized 

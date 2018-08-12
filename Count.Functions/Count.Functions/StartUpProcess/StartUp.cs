@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Count.Functions.MessageHandlers;
 using Count.Functions.Models;
+using Count.Functions.Services;
 using SimpleInjector;
 
 namespace Count.Functions.StartUpProcess
@@ -20,6 +21,8 @@ namespace Count.Functions.StartUpProcess
             Type type = Type.GetType(messageType);
 
             _container.Register(type);
+            _container.Register<IAzureService, AzureService>();
+            _container.Register<IRestService, RestService>();
             var instance = (IMessageHandler)_container.GetInstance(type);
             await instance.HandleAsync(message).ConfigureAwait(false);
         }

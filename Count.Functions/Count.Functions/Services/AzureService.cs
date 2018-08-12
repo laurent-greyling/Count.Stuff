@@ -3,37 +3,46 @@ using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Queue;
 using Microsoft.WindowsAzure.Storage.Table;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Count.Functions.Services
 {
-    public class AzureService<T> : IAzureService<T>
+    public class AzureService : IAzureService
     {
-        CloudTable _table;
-        CloudQueue _queue;
         CloudStorageAccount _account;
-        CloudTableClient _tableClient;
-        CloudQueueClient _queueClient;
 
-        public AzureService(string tableName, string queueName)
+        public AzureService()
         {
             _account = CloudStorageAccount.Parse(Environment.GetEnvironmentVariable("AzureWebJobsStorage"));
-            _tableClient = _account.CreateCloudTableClient();
-            _queueClient = _account.CreateCloudQueueClient();
-
-            _table = _tableClient.GetTableReference(tableName);
-            _queue = _queueClient.GetQueueReference(queueName);
-
         }
 
-        public Task InsertOrMerge(T entity)
+        public async Task InsertOrMergeAsync(string tableName, List<ITableEntity> entities)
         {
-            throw new System.NotImplementedException();
+            //You will notice there is no CreateIfNotExist, this is because I assume that the table already exist
+            //Usually when you deploy an Azure service you will use the ARM template to create all the resources you need.
+            //If this is not the case, feel free to add await _table.CreateIfNotExistAsync();
+            //Same goes for the queue messsages
+            var tableClient = _account.CreateCloudTableClient();
+            var table = tableClient.GetTableReference(tableName);
+            
+            var batchOperation = new TableBatchOperation();
+
+            foreach (var entity in entities)
+            {
+                batchOperation.InsertOrMerge(entity);
+            }
+
+            await table.ExecuteBatchAsync(batchOperation).ConfigureAwait(false);
         }
 
-        public Task SendMessage(string message)
+        public async Task SendMessageAsync(string queueName, string message)
         {
-            throw new System.NotImplementedException();
+            var queueClient = _account.CreateCloudQueueClient();
+            var queue = queueClient.GetQueueReference(queueName);
+
+            var cloudMessage = new CloudQueueMessage(message);
+            await queue.AddMessageAsync(cloudMessage).ConfigureAwait(false);
         }
     }
 }

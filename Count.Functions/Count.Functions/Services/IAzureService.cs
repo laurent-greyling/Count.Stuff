@@ -1,4 +1,6 @@
 ﻿
+using Microsoft.WindowsAzure.Storage.Table;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Count.Functions.Services
@@ -7,20 +9,20 @@ namespace Count.Functions.Services
     /// Service to Access azure services
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    interface IAzureService<T>
+    interface IAzureService
     {
         /// <summary>
-        /// Insert or merge
+        /// Azure Table Insert or merge
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        Task InsertOrMerge(T entity);
+        Task InsertOrMergeAsync(string tableName, List<ITableEntity> entities);
 
         /// <summary>
         /// Send a message to storage queue
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        Task SendMessage(string message);
+        Task SendMessageAsync(string queueName, string message);
     }
 }

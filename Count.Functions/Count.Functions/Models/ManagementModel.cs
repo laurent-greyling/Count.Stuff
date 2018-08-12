@@ -20,5 +20,9 @@ namespace Count.Functions.Models
         /// Current object we need to process
         /// </summary>
         public int ObjectNumber { get; set; }
+
+        public int NumberOfPages { get; set; }
+
+        public bool IsGardenSearch { get; set; }
     }
 }

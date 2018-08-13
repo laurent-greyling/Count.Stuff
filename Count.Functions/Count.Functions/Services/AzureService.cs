@@ -36,6 +36,24 @@ namespace Count.Functions.Services
             await table.ExecuteBatchAsync(batchOperation).ConfigureAwait(false);
         }
 
+        public async Task InsertOrMergeAsync(string tableName, ITableEntity entity)
+        {
+            var tableClient = _account.CreateCloudTableClient();
+            var table = tableClient.GetTableReference(tableName);
+
+            var operation = TableOperation.InsertOrMerge(entity);
+
+            await table.ExecuteAsync(operation).ConfigureAwait(false);
+        }
+
+        public async Task<TableResult> RetrieveEntityAsync<T>(string tableName, string partitionKey, string rowKey) where T : ITableEntity
+        {
+            var tableClient = _account.CreateCloudTableClient();
+            var table = tableClient.GetTableReference(tableName);
+            var operation = TableOperation.Retrieve<T>(partitionKey, rowKey);
+            return await table.ExecuteAsync(operation);
+        }
+
         public async Task SendMessageAsync(string queueName, string message)
         {
             var queueClient = _account.CreateCloudQueueClient();

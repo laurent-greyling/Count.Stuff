@@ -8,15 +8,21 @@ namespace Count.Functions.Services
     /// <summary>
     /// Service to Access azure services
     /// </summary>
-    /// <typeparam name="T"></typeparam>
     interface IAzureService
     {
+        /// <summary>
+        /// Azure Table Insert or merge batch
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        Task InsertOrMergeAsync(string tableName, List<ITableEntity> entities);
+
         /// <summary>
         /// Azure Table Insert or merge
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        Task InsertOrMergeAsync(string tableName, List<ITableEntity> entities);
+        Task InsertOrMergeAsync(string tableName, ITableEntity entity);
 
         /// <summary>
         /// Send a message to storage queue
@@ -24,5 +30,12 @@ namespace Count.Functions.Services
         /// <param name="message"></param>
         /// <returns></returns>
         Task SendMessageAsync(string queueName, string message);
+
+        /// <summary>
+        /// Get table Entity
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        Task<TableResult> RetrieveEntityAsync<T>(string tableName, string partitionKey, string rowKey) where T : ITableEntity;
     }
 }

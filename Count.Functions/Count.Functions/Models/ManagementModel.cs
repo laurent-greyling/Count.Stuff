@@ -7,6 +7,10 @@ namespace Count.Functions.Models
     public class ManagementModel
     {
         /// <summary>
+        /// Assigned ID from client, preferably a GUID
+        /// </summary>
+        public string ProcessId { get; set; }
+        /// <summary>
         /// Message Type to direct messagehandler to correct process
         /// </summary>
         public string MessageType { get; set; }
@@ -23,6 +27,9 @@ namespace Count.Functions.Models
 
         public int NumberOfPages { get; set; }
 
+        /// <summary>
+        /// Is the search based on normal or with criteria garden added
+        /// </summary>
         public bool IsGardenSearch { get; set; }
     }
 }

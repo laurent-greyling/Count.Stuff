@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
+﻿
 namespace Count.Functions.Models
 {
     public class ObjectModel
@@ -10,10 +7,8 @@ namespace Count.Functions.Models
 
         public bool IsVerkocht { get; set; }
 
-        public bool IsVerkochtOfVerhuurd { get; set; }
-
         public int MakelaarId { get; set; }
 
-        public int MakelaarNaam { get; set; }
+        public string MakelaarNaam { get; set; }
     }
 }

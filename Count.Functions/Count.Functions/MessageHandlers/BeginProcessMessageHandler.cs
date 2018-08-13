@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Count.Functions.Entities;
 using Count.Functions.Models;
 using Count.Functions.Services;
 using Newtonsoft.Json;
@@ -40,38 +41,39 @@ namespace Count.Functions.MessageHandlers
 
             try
             {
-                var countToEnd = 0;
                 var result = await _restService.GetAsync(request);
                 var workDetails = JsonConvert.DeserializeObject<WorkerModel>(result);
+                await LogStartProgressAsync(message.ProcessId, workDetails, message.IsGardenSearch);
 
-                do
+                for (int countToEnd = 0; countToEnd <= workDetails.Paging.AantalPaginas; countToEnd++)
                 {
-                    countToEnd++;
-
-                    await SendBasicSearchMessageAsync(countToEnd, workDetails, message.IsGardenSearch);
+                    await SendBasicSearchMessageAsync(message.ProcessId, countToEnd, workDetails, message.IsGardenSearch);
 
                     //If at end restart process with search criteria for garden. 
                     //Would like not do to this, but cannot find element in object for hasgarden.
-                    
-                    if (countToEnd == workDetails.Paging.AantalPaginas)
+                    if (countToEnd == workDetails.Paging.AantalPaginas && !message.IsGardenSearch)
                     {
-                        //Do not do this again, need another criteria in if else we will end up in infinate loop
-                        await SendSearchCriteriaMessage();
+                        await SendSearchCriteriaMessage(message.ProcessId);
                     }
-
-                } while (countToEnd < workDetails.Paging.AantalPaginas);
+                }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                var t = ex;
                 //TODO: Need to log something here, or send message back to client to inform of failure
                 throw;
             }
         }
 
-        private async Task SendBasicSearchMessageAsync(int countToEnd, WorkerModel workDetails, bool isGardenSearch)
+        private async Task SendBasicSearchMessageAsync(
+            string processId,
+            int countToEnd,
+            WorkerModel workDetails,
+            bool isGardenSearch)
         {
             var messageDetails = new ManagementModel
             {
+                ProcessId = processId,
                 MessageType = MessageType.SaveDetails.ToString(),
                 ObjectNumber = countToEnd,
                 NumberOfObjects = workDetails.TotaalAantalObjecten,
@@ -81,16 +83,14 @@ namespace Count.Functions.MessageHandlers
 
             var messageContent = JsonConvert.SerializeObject(messageDetails);
 
-            //Want to block before sending the message. This is in an effort (1st level) to limit the request per minute for API calls
-            //Use thread sleep to block thread. Pausing with timer elapsed will pause and not block so paralallism of function will send messsage multiple times.
-            Thread.Sleep(500);
             await _azureService.SendMessageAsync(AppConst.ManagementQueueName, messageContent);
         }
 
-        private async Task SendSearchCriteriaMessage()
+        private async Task SendSearchCriteriaMessage(string processId)
         {
             var messageDetails = new ManagementModel
             {
+                ProcessId = processId,
                 MessageType = MessageType.BeginProcess.ToString(),
                 ObjectNumber = 1,
                 IsGardenSearch = true
@@ -98,6 +98,46 @@ namespace Count.Functions.MessageHandlers
 
             var messageContent = JsonConvert.SerializeObject(messageDetails);
             await _azureService.SendMessageAsync(AppConst.ManagementQueueName, messageContent);
+        }
+
+        /// <summary>
+        /// Log when process starts, this will be updated by worker.
+        /// Client can check this table to know the status of thr process
+        /// </summary>
+        /// <param name="processId"></param>
+        /// <param name="workerModel"></param>
+        /// <param name="isGardenSearch"></param>
+        /// <returns></returns>
+        private async Task LogStartProgressAsync(string processId, WorkerModel workerModel, bool isGardenSearch)
+        {
+            try
+            {
+                //This is to check if an already existing process has started/completed for specific process.
+                //This is also to gaurd against resetting the normal process once garden process starts
+                var currentProgressEntity = await _azureService.RetrieveEntityAsync<ProgressEntity>(
+                    AppConst.ProgressTable,
+                    AppConst.CountProgressPartitionKey,
+                    processId);
+
+                var progress = (ProgressEntity)currentProgressEntity.Result;
+
+                var entity = new ProgressEntity
+                {
+                    PartitionKey = AppConst.CountProgressPartitionKey,
+                    RowKey = processId,
+                    NormalProgress = progress == null ? 0 : progress.NormalProgress,
+                    GardenProgress = progress == null ? 0 : progress.GardenProgress,
+                    NumberOfNormalObjects = progress == null ? workerModel.TotaalAantalObjecten : progress.NumberOfNormalObjects,
+                    NumberOfGardenObjects = isGardenSearch ? workerModel.TotaalAantalObjecten : 0
+                };
+
+                await _azureService.InsertOrMergeAsync(AppConst.ProgressTable, entity);
+            }
+            catch (Exception e)
+            {
+                //TODO: log error, send message back
+                throw;
+            }
         }
     }
 }

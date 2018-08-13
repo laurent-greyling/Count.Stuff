@@ -1,5 +1,7 @@
 {
   "queues": {
+    //The maximum interval in milliseconds between queue polls.
+    "maxPollingInterval": 1000,
     // The visibility timeout that will be applied to messages that fail processing
     // (i.e. the time interval between retries). The default is zero.
     "visibilityTimeout": "00:00:05",
@@ -8,13 +10,7 @@
     "batchSize": 1,
     // The number of times to try processing a message before
     // moving it to the poison queue. The default is 5.
-    "maxDequeueCount": 5,
-    // The threshold at which a new batch of messages will be fetched.
-    // The default is batchSize/2. Increasing this value will increase the
-    // level of concurrency and therefore throughput. New batches of messages
-    // will be pulled until the number of messages being processed is greater
-    // than this threshold. When the number dips below this threshold, new
-    // batches will be fetched.
-    "newBatchThreshold": 1
+    //Dont want this bigger for now as we have no code to mitigate duplicate insertion
+    "maxDequeueCount": 1
   }
 }

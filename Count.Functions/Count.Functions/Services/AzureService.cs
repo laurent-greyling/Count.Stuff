@@ -23,6 +23,7 @@ namespace Count.Functions.Services
             //Usually when you deploy an Azure service you will use the ARM template to create all the resources you need.
             //If this is not the case, feel free to add await _table.CreateIfNotExistAsync();
             //Same goes for the queue messsages
+            //Create if not exist will come into play if I know the agent table will grow to big, then I would rather create a table per processId
             var tableClient = _account.CreateCloudTableClient();
             var table = tableClient.GetTableReference(tableName);
             

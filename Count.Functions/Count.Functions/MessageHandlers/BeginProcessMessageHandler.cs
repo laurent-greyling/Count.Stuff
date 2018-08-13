@@ -22,7 +22,7 @@ namespace Count.Functions.MessageHandlers
         /// <summary>
         /// Message Handler to start the process of finding the objects to count
         /// This process will get the first object, see how many objects exist and need to be navigated
-        /// This will then start queueing message for the next handler to pick up and process the data
+        /// This will then start queueing messages for the next handler to pick up and process the data
         /// </summary>
         public BeginProcessMessageHandler()
         {
@@ -33,6 +33,7 @@ namespace Count.Functions.MessageHandlers
 
         public async Task HandleAsync(ManagementModel message)
         {
+            //TODO: This could be a helper class as it is shared between BeginProcess and SaveDetails messagehandlers
             var apiUrl = Environment.GetEnvironmentVariable("ApiBaseUrl");
             var apiKey = Environment.GetEnvironmentVariable("ApiKey");
             var request = message.IsGardenSearch
@@ -45,16 +46,15 @@ namespace Count.Functions.MessageHandlers
                 var workDetails = JsonConvert.DeserializeObject<WorkerModel>(result);
                 await LogStartProgressAsync(message.ProcessId, workDetails, message.IsGardenSearch);
 
-                for (int countToEnd = 0; countToEnd <= workDetails.Paging.AantalPaginas; countToEnd++)
+                for (int countToEnd = 1; countToEnd <= workDetails.Paging.AantalPaginas; countToEnd++)
                 {
                     await SendBasicSearchMessageAsync(message.ProcessId, countToEnd, workDetails, message.IsGardenSearch);
+                }
 
-                    //If at end restart process with search criteria for garden. 
-                    //Would like not do to this, but cannot find element in object for hasgarden.
-                    if (countToEnd == workDetails.Paging.AantalPaginas && !message.IsGardenSearch)
-                    {
-                        await SendSearchCriteriaMessage(message.ProcessId);
-                    }
+                //If at end restart process with search criteria for garden.
+                if (!message.IsGardenSearch)
+                {
+                    await SendSearchCriteriaMessage(message.ProcessId);
                 }
             }
             catch (Exception ex)
@@ -65,6 +65,15 @@ namespace Count.Functions.MessageHandlers
             }
         }
 
+        /// <summary>
+        /// This will send message to be picked up by savedetails handler
+        /// Save details will use this message to get the correct page and navigate through the objects
+        /// </summary>
+        /// <param name="processId"></param>
+        /// <param name="countToEnd"></param>
+        /// <param name="workDetails"></param>
+        /// <param name="isGardenSearch"></param>
+        /// <returns></returns>
         private async Task SendBasicSearchMessageAsync(
             string processId,
             int countToEnd,
@@ -86,6 +95,11 @@ namespace Count.Functions.MessageHandlers
             await _azureService.SendMessageAsync(AppConst.ManagementQueueName, messageContent);
         }
 
+        /// <summary>
+        /// Will queue a new message for Begin process where the process will restart with Garden added as search criteria
+        /// </summary>
+        /// <param name="processId"></param>
+        /// <returns></returns>
         private async Task SendSearchCriteriaMessage(string processId)
         {
             var messageDetails = new ManagementModel
@@ -102,7 +116,7 @@ namespace Count.Functions.MessageHandlers
 
         /// <summary>
         /// Log when process starts, this will be updated by worker.
-        /// Client can check this table to know the status of thr process
+        /// Client can check this table to know the status of their process
         /// </summary>
         /// <param name="processId"></param>
         /// <param name="workerModel"></param>

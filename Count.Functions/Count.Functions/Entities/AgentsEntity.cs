@@ -13,5 +13,7 @@ namespace Count.Functions.Entities
         /// Number of entities for agent where garden is involved
         /// </summary>
         public int GardenCount { get; set; }
+
+        public string AgentName { get; set; }
     }
 }

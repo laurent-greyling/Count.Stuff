@@ -34,5 +34,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\RestCall.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\SqliteService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\CreateProcessViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\GetProcessListViewModel.cs" />
   </ItemGroup>
 </Project>

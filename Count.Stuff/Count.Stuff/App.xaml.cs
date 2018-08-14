@@ -12,6 +12,7 @@ namespace Count.Stuff
 		{
 			InitializeComponent();
 
+            DependencyService.Register<CreateSqliteTable>();
             DependencyService.Register<SqliteService<ProcessEntity>>();
             DependencyService.Register<AzureService>();
 

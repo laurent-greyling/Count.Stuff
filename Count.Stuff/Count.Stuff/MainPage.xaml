@@ -7,11 +7,19 @@
     <ContentPage.ToolbarItems>
         <ToolbarItem Icon="plus.png" Clicked="Add_New_Process" Priority="0"/>
     </ContentPage.ToolbarItems>
-    <StackLayout>
-        <!-- Place new controls here -->
-    	<Label Text="Welcome to Xamarin.Forms!" 
-           HorizontalOptions="Center"
-           VerticalOptions="CenterAndExpand" />
+    <StackLayout Padding="5,5,5,5">
+        <ListView ItemsSource="{Binding ProcessIds}"
+                  HasUnevenRows="True">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Label Text="{Binding Id}"
+                               VerticalOptions="CenterAndExpand"
+                               HorizontalOptions="StartAndExpand"
+                               ClassId="{Binding ProcessId}"/>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
     </StackLayout>
-
 </ContentPage>

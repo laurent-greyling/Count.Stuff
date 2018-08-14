@@ -3,10 +3,8 @@ using Count.Stuff.Models;
 using Count.Stuff.Services;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -17,6 +15,9 @@ namespace Count.Stuff.ViewModels
         readonly ISqliteService<ProcessEntity> _sqlite;
         readonly IAzureService _azure;
 
+        /// <summary>
+        /// Create the process and send the message to the queue for the function to pick up and start processing
+        /// </summary>
         public CreateProcessViewModel()
         {
             _sqlite = DependencyService.Get<ISqliteService<ProcessEntity>>();

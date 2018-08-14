@@ -9,14 +9,14 @@
     </ContentPage.ToolbarItems>
     <StackLayout Padding="5,5,5,5">
         <ListView ItemsSource="{Binding ProcessIds}"
-                  HasUnevenRows="True">
+                  HasUnevenRows="True"
+                  ItemTapped="Navigate_To_Process">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
                         <Label Text="{Binding Id}"
                                VerticalOptions="CenterAndExpand"
-                               HorizontalOptions="StartAndExpand"
-                               ClassId="{Binding ProcessId}"/>
+                               HorizontalOptions="StartAndExpand"/>
                     </ViewCell>
                 </DataTemplate>
             </ListView.ItemTemplate>

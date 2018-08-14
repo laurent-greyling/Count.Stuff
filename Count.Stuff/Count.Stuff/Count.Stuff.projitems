@@ -24,6 +24,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Models\AppConst.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\ManagementModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\MessageType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ProcessPage.xaml.cs">
+      <DependentUpon>ProcessPage.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Services\AzureService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\CreateSqliteTable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IAzureService.cs" />
@@ -35,5 +39,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\SqliteService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\CreateProcessViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\GetProcessListViewModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)ProcessPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

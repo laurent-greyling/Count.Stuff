@@ -1,4 +1,5 @@
-﻿using Count.Stuff.ViewModels;
+﻿using Count.Stuff.Entities;
+using Count.Stuff.ViewModels;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -28,6 +29,15 @@ namespace Count.Stuff
             ProcessIds = new GetProcessListViewModel();
 
             BindingContext = ProcessIds;
+        }
+
+        public async Task Navigate_To_Process(object sender, ItemTappedEventArgs e)
+        {
+            var item = sender as ListView;
+            var selectedItem = item.SelectedItem as ProcessEntity;
+            var processId = selectedItem.ProcessId;
+
+            await Navigation.PushAsync(new ProcessPage(processId));
         }
     }
 }

@@ -16,11 +16,14 @@
     <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Entities\ProcessEntity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\NotifyTaskCompletion.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Models\AppConst.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\ManagementModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\MessageType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\AzureService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\CreateSqliteTable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IAzureService.cs" />
@@ -30,5 +33,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\ISqliteService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\RestCall.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\SqliteService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\CreateProcessViewModel.cs" />
   </ItemGroup>
 </Project>

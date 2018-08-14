@@ -1,7 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using Count.Stuff.Entities;
+using Count.Stuff.Models;
+using Count.Stuff.Services;
+using Count.Stuff.ViewModels;
+using Newtonsoft.Json;
+using System;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -9,9 +11,20 @@ namespace Count.Stuff
 {
 	public partial class MainPage : ContentPage
 	{
-		public MainPage()
+        readonly ISqliteService<ProcessEntity> _sqlite;
+        readonly IAzureService _azure;
+
+        public MainPage()
 		{
 			InitializeComponent();
-		}
-	}
+
+            _sqlite = DependencyService.Get<ISqliteService<ProcessEntity>>();
+            _azure = DependencyService.Get<IAzureService>();
+        }
+
+        public async Task Add_New_Process()
+        {
+            await new CreateProcessViewModel().Create();
+        }
+    }
 }

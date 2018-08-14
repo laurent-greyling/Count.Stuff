@@ -1,0 +1,14 @@
+﻿gitignore will exclude the local.setting.json file. 
+
+Create this file and ad the following settings for local debugging
+
+{
+    "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "",
+    "AzureWebJobsDashboard": "",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet",
+    "ApiBaseUrl": "",
+    "ApiKey": ""
+  }
+}

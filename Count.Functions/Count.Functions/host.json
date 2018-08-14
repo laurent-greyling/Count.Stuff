@@ -1,0 +1,16 @@
+{
+  "queues": {
+    //The maximum interval in milliseconds between queue polls.
+    "maxPollingInterval": 1000,
+    // The visibility timeout that will be applied to messages that fail processing
+    // (i.e. the time interval between retries). The default is zero.
+    "visibilityTimeout": "00:00:05",
+    // The number of queue messages to retrieve and process in
+    // parallel (per job function). The default is 16 and the maximum is 32.
+    "batchSize": 1,
+    // The number of times to try processing a message before
+    // moving it to the poison queue. The default is 5.
+    //Dont want this bigger for now as we have no code to mitigate duplicate insertion
+    "maxDequeueCount": 1
+  }
+}

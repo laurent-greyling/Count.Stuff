@@ -17,6 +17,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Entities\ProcessEntity.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Entities\ProgressEntity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\NotifyTaskCompletion.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -39,6 +40,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\SqliteService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\CreateProcessViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\GetProcessListViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\GetProgressViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)ProcessPage.xaml">

@@ -19,7 +19,7 @@ namespace Count.Stuff.Services
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        Task<TableResult> RetrieveEntityAsync<T>(string tableName, string partitionKey, string rowKey) where T : ITableEntity;
+        Task<T> RetrieveEntityAsync<T>(string tableName, string partitionKey, string rowKey) where T : ITableEntity, new();
 
         /// <summary>
         /// Get all entities in a partition

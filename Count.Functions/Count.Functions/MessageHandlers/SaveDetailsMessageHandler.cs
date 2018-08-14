@@ -35,13 +35,14 @@ namespace Count.Functions.MessageHandlers
                 : $"{apiUrl}{apiKey}{AppConst.SearchQuery}&page={message.ObjectNumber}&pagesize=25";
 
             var progressCounter = 0;
+            var entities = new ObjectsModel();
 
             try
             {
                 //Pause between requests to try and mitigate the request per minute
                 await Task.Delay(600);
                 var result = await _restService.GetAsync(request);
-                var entities = JsonConvert.DeserializeObject<ObjectsModel>(result);
+                entities = JsonConvert.DeserializeObject<ObjectsModel>(result);
 
                 foreach (var item in entities.Objects)
                 {
@@ -72,6 +73,11 @@ namespace Count.Functions.MessageHandlers
             var progress = (ProgressEntity)currentProgress.Result;
             progress.NormalProgress = message.IsGardenSearch ? progress.NormalProgress : progress.NormalProgress + progressCounter;
             progress.GardenProgress = message.IsGardenSearch ? progress.GardenProgress + progressCounter : progress.GardenProgress;
+
+            //Update this so if someone added or removed and object the count will still match up at end to indigate process have completed
+            //this does not safegaurd against something removed once already iterated over.
+            progress.NumberOfNormalObjects = message.IsGardenSearch ? progress.NumberOfNormalObjects : entities.TotaalAantalObjecten;
+            progress.NumberOfGardenObjects = message.IsGardenSearch ? entities.TotaalAantalObjecten : progress.NumberOfGardenObjects;
 
             await _azureService.InsertOrMergeAsync(AppConst.ProgressTable, progress);
         }

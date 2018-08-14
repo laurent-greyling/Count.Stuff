@@ -35,11 +35,14 @@ namespace Count.Stuff.ViewModels
         /// </summary>
         public GetProcessListViewModel()
         {
-            _sqlite = DependencyService.Get<ISqliteService<ProcessEntity>>();
+            _sqlite = DependencyService.Get<ISqliteService<ProcessEntity>>();            
+            _processIds = Get();
+        }
 
+        private IEnumerable<ProcessEntity> Get()
+        {
             var entities = _sqlite.Get();
-
-            _processIds = entities.OrderByDescending(x=>x.Id).ToList() ?? new List<ProcessEntity>();
+            return entities.OrderByDescending(x => x.Id).ToList() ?? new List<ProcessEntity>();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

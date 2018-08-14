@@ -59,8 +59,63 @@ namespace Count.Functions.MessageHandlers
             }
             catch (Exception ex)
             {
-                var t = ex;
                 //TODO: Need to log something here, or send message back to client to inform of failure
+                //Would preferably log exceptions into Application Insights. This will allow us to query AI and 
+                //see what went wrong on any given day. As AI cost a bit of money, I did not create this resource in Azure
+
+                //Example Query for AI for exceptions
+                //exceptions | where timestamp < ago(7d) 
+
+
+                //If this is seen as warning or fatal level (at minimum I see this as a warning that process didn't start),
+                //one can also create an Alert in Azure that when AI has a severity level of 2 or 3 someone will get an email or sms
+
+                //Code recently done for logging these types of warnings that could be implemented for exceptions
+                //AI Query = traces | where (severityLevel == 3 or severityLevel == 2 ) and (message startswith 'FATAL' or message startswith 'WARNING')
+                //private bool IsValidSasToken(OperationalSettings connectionSettings)
+                //{
+                //    var productionConnection = connectionSettings.ProductionConnection;
+
+                //    var indexOfExpirationDate = productionConnection.IndexOf("se=");
+
+                //    if (indexOfExpirationDate < 0)
+                //    {
+                //        //severitylevel 3 in AI
+                //        _logger.Fatal("FATAL: no valid signed expiry date found");
+                //        return false;
+                //    }
+                //    var expiryDate = productionConnection.Substring((indexOfExpirationDate + 3), 10);
+
+                //    var expirationDate = DateTime.ParseExact(
+                //        expiryDate,
+                //        "yyyy-MM-dd",
+                //        CultureInfo.InvariantCulture);
+
+                //    var today = DateTime.UtcNow.Date;
+
+                //    var expirationWarning = DateTime.Compare(expirationDate.AddDays(-10), today);
+                //    var expirationError = DateTime.Compare(expirationDate, today);
+
+                //    if (expirationError == 0)
+                //    {
+                //        _logger.Fatal("FATAL: sas connection is expiring today {Today}", today);
+                //        return false;
+                //    }
+
+                //    if (expirationError < 0)
+                //    {
+                //        _logger.Fatal("FATAL: sas token has expired on {ExpirationDate}", expirationDate);
+                //        return false;
+                //    }
+
+                //    if (expirationWarning <= 0)
+                //    {
+                //        //severitylevel 2 in AI
+                //        _logger.Warning("WARNING: sas token will expire in a few days");
+                //    }
+
+                //    return true;
+                //}
                 throw;
             }
         }
@@ -124,34 +179,26 @@ namespace Count.Functions.MessageHandlers
         /// <returns></returns>
         private async Task LogStartProgressAsync(string processId, WorkerModel workerModel, bool isGardenSearch)
         {
-            try
+            //This is to check if an already existing process has started/completed for specific process.
+            //This is also to gaurd against resetting the normal process once garden process starts
+            var currentProgressEntity = await _azureService.RetrieveEntityAsync<ProgressEntity>(
+                AppConst.ProgressTable,
+                AppConst.CountProgressPartitionKey,
+                processId);
+
+            var progress = (ProgressEntity)currentProgressEntity.Result;
+
+            var entity = new ProgressEntity
             {
-                //This is to check if an already existing process has started/completed for specific process.
-                //This is also to gaurd against resetting the normal process once garden process starts
-                var currentProgressEntity = await _azureService.RetrieveEntityAsync<ProgressEntity>(
-                    AppConst.ProgressTable,
-                    AppConst.CountProgressPartitionKey,
-                    processId);
+                PartitionKey = AppConst.CountProgressPartitionKey,
+                RowKey = processId,
+                NormalProgress = progress == null ? 0 : progress.NormalProgress,
+                GardenProgress = progress == null ? 0 : progress.GardenProgress,
+                NumberOfNormalObjects = progress == null ? workerModel.TotaalAantalObjecten : progress.NumberOfNormalObjects,
+                NumberOfGardenObjects = isGardenSearch ? workerModel.TotaalAantalObjecten : 0
+            };
 
-                var progress = (ProgressEntity)currentProgressEntity.Result;
-
-                var entity = new ProgressEntity
-                {
-                    PartitionKey = AppConst.CountProgressPartitionKey,
-                    RowKey = processId,
-                    NormalProgress = progress == null ? 0 : progress.NormalProgress,
-                    GardenProgress = progress == null ? 0 : progress.GardenProgress,
-                    NumberOfNormalObjects = progress == null ? workerModel.TotaalAantalObjecten : progress.NumberOfNormalObjects,
-                    NumberOfGardenObjects = isGardenSearch ? workerModel.TotaalAantalObjecten : 0
-                };
-
-                await _azureService.InsertOrMergeAsync(AppConst.ProgressTable, entity);
-            }
-            catch (Exception e)
-            {
-                //TODO: log error, send message back
-                throw;
-            }
+            await _azureService.InsertOrMergeAsync(AppConst.ProgressTable, entity);
         }
     }
 }

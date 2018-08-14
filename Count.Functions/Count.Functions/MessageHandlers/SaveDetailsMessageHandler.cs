@@ -58,7 +58,12 @@ namespace Count.Functions.MessageHandlers
             catch (Exception ex)
             {
                 progressCounter--;
-                //Log this if something went wrong and inform counts can be off as result of this/ or return nothing and have process restarted
+                //Log this in Application Insights or some logger - see comment in BeginProcessMessageHandler
+                //What also need to still be handled extra in this exception is that when failed, a method similar to ProcessAgent need to remove the counts 
+                //of already added.
+                //Or we can keep a temp (cache) record of agents that were succesfully added and make sure on retry they do not get added again.
+                //This is the main reason for not having the functions app retry (see host.json) at this point as there is no current logic to not add duplicates. For now 
+                //we just continue and counts will not be updated, so process will not be seen as finished, but we can handle this on the client side for now.
                 throw;
             }
 

@@ -4,12 +4,15 @@
              x:Class="Count.Stuff.ProcessPage">
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="{Binding Progress.IsNormalDone}"
+            <Label Text="Loading" IsVisible="{Binding Progress.IsNotCompleted}"/>
+            <Label Text="{Binding Progress.Result.IsNormalSearchDone}"
                 VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-            <Label Text="{Binding Progress.IsGardenDone}"
+                HorizontalOptions="CenterAndExpand" 
+                   IsVisible="{Binding Progress.IsSuccessfullyCompleted}"/>
+            <Label Text="{Binding Progress.Result.IsGardenSearchDone}"
                 VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+                HorizontalOptions="CenterAndExpand"
+                   IsVisible="{Binding Progress.IsSuccessfullyCompleted}"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

@@ -79,6 +79,9 @@ namespace Count.Functions.MessageHandlers
             progress.NumberOfNormalObjects = message.IsGardenSearch ? progress.NumberOfNormalObjects : entities.TotaalAantalObjecten;
             progress.NumberOfGardenObjects = message.IsGardenSearch ? entities.TotaalAantalObjecten : progress.NumberOfGardenObjects;
 
+            progress.IsNormalSearchDone = progress.NumberOfNormalObjects == progress.NormalProgress && progress.NormalProgress > 0;
+            progress.IsGardenSearchDone = progress.NumberOfGardenObjects == progress.GardenProgress && progress.GardenProgress > 0;
+
             await _azureService.InsertOrMergeAsync(AppConst.ProgressTable, progress);
         }
 

@@ -14,38 +14,20 @@ namespace Count.Stuff.ViewModels
     {
         readonly IAzureService _azure;
 
-        public bool _isNormalDone { get; set; }
+        public NotifyTaskCompletion<ProgressEntity> _progress { get; set; }
 
-        public bool IsNormalDone
+        public NotifyTaskCompletion<ProgressEntity> Progress
         {
             get
             {
-                return _isNormalDone;
+                return _progress;
             }
             set
             {
-                if (_isNormalDone != value)
+                if (_progress != value)
                 {
-                    _isNormalDone = value;
-                    OnPropertyChanged("IsNormalDone");
-                }
-            }
-        }
-
-        public bool _isGardenDone { get; set; }
-
-        public bool IsGardenDone
-        {
-            get
-            {
-                return _isGardenDone;
-            }
-            set
-            {
-                if (_isGardenDone != value)
-                {
-                    _isGardenDone = value;
-                    OnPropertyChanged("IsGardenDone");
+                    _progress = value;
+                    OnPropertyChanged("Progress");
                 }
             }
         }
@@ -58,16 +40,7 @@ namespace Count.Stuff.ViewModels
         {
             _azure = DependencyService.Get<IAzureService>();
 
-            Task.Run(async () => await Get(processId));
-        }
-
-        public async Task Get(string processId)
-        {
-            var progress = await _azure.RetrieveEntityAsync<ProgressEntity>(AppConst.ProgressTable, AppConst.CountProgressPartitionKey, processId);
-
-            _isNormalDone = progress.NormalProgress == progress.NumberOfNormalObjects;
-            _isGardenDone = progress.GardenProgress == progress.NumberOfGardenObjects;
-
+            Progress = new NotifyTaskCompletion<ProgressEntity>(_azure.RetrieveEntityAsync<ProgressEntity>(AppConst.ProgressTable, AppConst.CountProgressPartitionKey, processId));
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

@@ -40,8 +40,6 @@ namespace Count.Functions.MessageHandlers
 
             try
             {
-                //Pause between requests to try and mitigate the request per minute
-                await Task.Delay(600);
                 var result = await _restService.GetAsync(request);
                 entities = JsonConvert.DeserializeObject<ObjectsModel>(result);
 

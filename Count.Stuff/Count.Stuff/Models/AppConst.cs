@@ -1,7 +1,13 @@
 ﻿namespace Count.Stuff.Models
 {
+    /// <summary>
+    /// Class to keep some constant strings around, commonly used throughout the app
+    /// </summary>
     public class AppConst
     {
+        /// <summary>
+        /// Storage connection string. This is here as I have no solution yet to have it in a config file rather
+        /// </summary>
         public const string ConnectionString = "";
 
         /// <summary>

@@ -1,5 +1,8 @@
 ﻿namespace Count.Functions.Models
 {
+    /// <summary>
+    /// Class to keep some constant strings around, commonly used throughout the app
+    /// </summary>
     public class AppConst
     {
         /// <summary>

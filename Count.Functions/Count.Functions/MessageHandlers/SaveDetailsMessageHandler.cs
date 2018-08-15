@@ -114,6 +114,14 @@ namespace Count.Functions.MessageHandlers
             await _azureService.InsertOrMergeAsync(AppConst.AgentsTable, agentEntity);
         }
 
+        /// <summary>
+        /// Update the progress table, this is table client will use to check process and then navigate to 
+        /// display top results
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="progressCounter"></param>
+        /// <param name="entities"></param>
+        /// <returns></returns>
         private async Task UpdateProgress(ManagementModel message, int progressCounter, ObjectsModel entities)
         {
             //Update Progress table

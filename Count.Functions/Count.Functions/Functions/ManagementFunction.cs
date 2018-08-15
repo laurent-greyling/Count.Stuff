@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace Count.Functions.Functions
 {
+    /// <summary>
+    /// Function to handle start process and counting process
+    /// </summary>
     public static class ManagementFunction
     {
         [FunctionName("ManagementFunction")]

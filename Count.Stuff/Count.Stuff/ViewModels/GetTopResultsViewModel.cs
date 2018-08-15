@@ -33,6 +33,11 @@ namespace Count.Stuff.ViewModels
             }
         }
 
+        /// <summary>
+        /// Will get the list of agents from the agents table
+        /// </summary>
+        /// <param name="processId"></param>
+        /// <param name="isGardenResults"></param>
         public GetTopResultsViewModel(string processId, bool isGardenResults)
         {
             _azure = DependencyService.Get<IAzureService>();

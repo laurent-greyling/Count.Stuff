@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 
 namespace Count.Stuff.Services
 {
+    /// <summary>
+    /// Service to access azure
+    /// </summary>
     public interface IAzureService
     {
         /// <summary>

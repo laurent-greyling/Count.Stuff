@@ -2,6 +2,9 @@
 
 namespace Count.Functions.Services
 {
+    /// <summary>
+    /// Service to do rest calls
+    /// </summary>
     public interface IRestService
     {
         /// <summary>

@@ -24,8 +24,14 @@ namespace Count.Stuff.Entities
         /// </summary>
         public int NumberOfGardenObjects { get; set; }
 
+        /// <summary>
+        /// Checks if normal search is done
+        /// </summary>
         public bool IsNormalSearchDone { get; set; }
 
+        /// <summary>
+        /// Checks if search for gardens is done
+        /// </summary>
         public bool IsGardenSearchDone { get; set; }
     }
 }

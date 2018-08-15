@@ -12,6 +12,12 @@ namespace Count.Stuff
 	{
         public GetTopResultsViewModel Agents { get; set; }
         private bool _isGardenResults;
+
+        /// <summary>
+        /// Page that will hold the top results depending on where navigation comes from
+        /// </summary>
+        /// <param name="processId"></param>
+        /// <param name="isGardenResults"></param>
 		public TopResultsPage (string processId, bool isGardenResults)
 		{
             _isGardenResults = isGardenResults;
@@ -21,6 +27,10 @@ namespace Count.Stuff
             BindingContext = Agents;
 		}
 
+        /// <summary>
+        /// Depending if garden results or overal normal results is requested, this will order list and take top 10 of ordered list
+        /// </summary>
+        /// <returns></returns>
         private async Task Order_Results()
         {
             try

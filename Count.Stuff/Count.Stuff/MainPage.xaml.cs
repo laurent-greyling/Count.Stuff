@@ -9,6 +9,9 @@ namespace Count.Stuff
 	{
         public GetProcessListViewModel ProcessIds { get; set; }
 
+        /// <summary>
+        /// This page will hold the list of processes you started
+        /// </summary>
         public MainPage()
 		{
 			InitializeComponent();
@@ -31,6 +34,12 @@ namespace Count.Stuff
             BindingContext = ProcessIds;
         }
 
+        /// <summary>
+        /// Will navigate to the selected process
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <returns></returns>
         public async Task Navigate_To_Process(object sender, ItemTappedEventArgs e)
         {
             var item = sender as ListView;

@@ -61,7 +61,6 @@ namespace Count.Functions.MessageHandlers
             catch (Exception ex)
             {
                 await LogStartProgressAsync(message.ProcessId, workDetails, message.IsGardenSearch, true);
-                //TODO: Need to log something here, or send message back to client to inform of failure
                 //Would preferably log exceptions into Application Insights. This will allow us to query AI and 
                 //see what went wrong on any given day. As AI cost a bit of money, I did not create this resource in Azure
 
@@ -118,7 +117,6 @@ namespace Count.Functions.MessageHandlers
 
                 //    return true;
                 //}
-                throw;
             }
         }
 

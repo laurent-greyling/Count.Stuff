@@ -1,4 +1,5 @@
-using System;
+using Count.Stuff.Entities;
+using Count.Stuff.Services;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -11,7 +12,11 @@ namespace Count.Stuff
 		{
 			InitializeComponent();
 
-			MainPage = new MainPage();
+            DependencyService.Register<CreateSqliteTable>();
+            DependencyService.Register<SqliteService<ProcessEntity>>();
+            DependencyService.Register<AzureService>();
+
+            MainPage = new NavigationPage(new MainPage());
 		}
 
 		protected override void OnStart ()

@@ -35,13 +35,14 @@ namespace Count.Functions.MessageHandlers
                 : $"{apiUrl}{apiKey}{AppConst.SearchQuery}&page={message.ObjectNumber}&pagesize=25";
 
             var progressCounter = 0;
+            var entities = new ObjectsModel();
 
             try
             {
                 //Pause between requests to try and mitigate the request per minute
                 await Task.Delay(600);
                 var result = await _restService.GetAsync(request);
-                var entities = JsonConvert.DeserializeObject<ObjectsModel>(result);
+                entities = JsonConvert.DeserializeObject<ObjectsModel>(result);
 
                 foreach (var item in entities.Objects)
                 {
@@ -68,12 +69,7 @@ namespace Count.Functions.MessageHandlers
             }
 
             //Update Progress table
-            var currentProgress = await _azureService.RetrieveEntityAsync<ProgressEntity>(AppConst.ProgressTable, AppConst.CountProgressPartitionKey, message.ProcessId);
-            var progress = (ProgressEntity)currentProgress.Result;
-            progress.NormalProgress = message.IsGardenSearch ? progress.NormalProgress : progress.NormalProgress + progressCounter;
-            progress.GardenProgress = message.IsGardenSearch ? progress.GardenProgress + progressCounter : progress.GardenProgress;
-
-            await _azureService.InsertOrMergeAsync(AppConst.ProgressTable, progress);
+            await UpdateProgress(message, progressCounter, entities);
         }
 
         /// <summary>
@@ -82,7 +78,7 @@ namespace Count.Functions.MessageHandlers
         /// <param name="item"></param>
         /// <param name="message"></param>
         /// <returns></returns>
-        public async Task ProcessAgentAsync(ObjectModel item, ManagementModel message)
+        private async Task ProcessAgentAsync(ObjectModel item, ManagementModel message)
         {
             //Initially removed these characters to keep string safe for table storage rowkey. Not really needed anymore as this is not rowkey anymore
             var makelaarNaam = item.MakelaarNaam.Replace("/", "").Replace(@"\", "");
@@ -116,6 +112,24 @@ namespace Count.Functions.MessageHandlers
             }
 
             await _azureService.InsertOrMergeAsync(AppConst.AgentsTable, agentEntity);
+        }
+
+        private async Task UpdateProgress(ManagementModel message, int progressCounter, ObjectsModel entities)
+        {
+            //Update Progress table
+            var currentProgress = await _azureService.RetrieveEntityAsync<ProgressEntity>(AppConst.ProgressTable, AppConst.CountProgressPartitionKey, message.ProcessId);
+            var progress = (ProgressEntity)currentProgress.Result;
+            progress.NormalProgress = message.IsGardenSearch ? progress.NormalProgress : progress.NormalProgress + progressCounter;
+            progress.GardenProgress = message.IsGardenSearch ? progress.GardenProgress + progressCounter : progress.GardenProgress;
+
+            //Update this so if someone added or removed and object the count will still match up at end to indigate process have completed
+            progress.NumberOfNormalObjects = message.IsGardenSearch ? progress.NumberOfNormalObjects : entities.TotaalAantalObjecten;
+            progress.NumberOfGardenObjects = message.IsGardenSearch ? entities.TotaalAantalObjecten : progress.NumberOfGardenObjects;
+
+            progress.IsNormalSearchDone = progress.NumberOfNormalObjects == progress.NormalProgress && progress.NormalProgress > 0;
+            progress.IsGardenSearchDone = progress.NumberOfGardenObjects == progress.GardenProgress && progress.GardenProgress > 0;
+
+            await _azureService.InsertOrMergeAsync(AppConst.ProgressTable, progress);
         }
     }
 }

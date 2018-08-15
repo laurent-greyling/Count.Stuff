@@ -2,13 +2,24 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:Count.Stuff"
-             x:Class="Count.Stuff.MainPage">
-
-    <StackLayout>
-        <!-- Place new controls here -->
-    	<Label Text="Welcome to Xamarin.Forms!" 
-           HorizontalOptions="Center"
-           VerticalOptions="CenterAndExpand" />
+             x:Class="Count.Stuff.MainPage"
+             Title="Process History">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Icon="plus.png" Clicked="Add_New_Process" Priority="0"/>
+    </ContentPage.ToolbarItems>
+    <StackLayout Padding="5,5,5,5">
+        <ListView ItemsSource="{Binding ProcessIds}"
+                  HasUnevenRows="True"
+                  ItemTapped="Navigate_To_Process">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Label Text="{Binding Id}"
+                               VerticalOptions="CenterAndExpand"
+                               HorizontalOptions="StartAndExpand"/>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
     </StackLayout>
-
 </ContentPage>

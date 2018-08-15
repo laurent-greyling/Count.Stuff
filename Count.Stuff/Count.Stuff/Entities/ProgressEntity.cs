@@ -1,6 +1,6 @@
 ﻿using Microsoft.WindowsAzure.Storage.Table;
 
-namespace Count.Functions.Entities
+namespace Count.Stuff.Entities
 {
     public class ProgressEntity: TableEntity
     {

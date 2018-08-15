@@ -27,5 +27,12 @@ namespace Count.Functions.Entities
         public bool IsNormalSearchDone { get; set; }
 
         public bool IsGardenSearchDone { get; set; }
+
+        /// <summary>
+        /// If an error occur, update this table with error state true. This can 
+        /// then be used to communicate with client that their process failed and 
+        /// they should restart the process
+        /// </summary>
+        public bool InErrorState { get; set; }
     }
 }

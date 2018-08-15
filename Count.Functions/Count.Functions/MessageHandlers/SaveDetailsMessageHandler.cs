@@ -36,6 +36,7 @@ namespace Count.Functions.MessageHandlers
 
             var progressCounter = 0;
             var entities = new ObjectsModel();
+            var isError = false;
 
             try
             {
@@ -59,17 +60,17 @@ namespace Count.Functions.MessageHandlers
             catch (Exception ex)
             {
                 progressCounter--;
+                isError = true;
                 //Log this in Application Insights or some logger - see comment in BeginProcessMessageHandler
                 //What also need to still be handled extra in this exception is that when failed, a method similar to ProcessAgent need to remove the counts 
                 //of already added.
                 //Or we can keep a temp (cache) record of agents that were succesfully added and make sure on retry they do not get added again.
                 //This is the main reason for not having the functions app retry (see host.json) at this point as there is no current logic to not add duplicates. For now 
                 //we just continue and counts will not be updated, so process will not be seen as finished, but we can handle this on the client side for now.
-                throw;
             }
 
             //Update Progress table
-            await UpdateProgress(message, progressCounter, entities);
+            await UpdateProgress(message, progressCounter, entities, isError);
         }
 
         /// <summary>
@@ -122,7 +123,10 @@ namespace Count.Functions.MessageHandlers
         /// <param name="progressCounter"></param>
         /// <param name="entities"></param>
         /// <returns></returns>
-        private async Task UpdateProgress(ManagementModel message, int progressCounter, ObjectsModel entities)
+        private async Task UpdateProgress(ManagementModel message,
+            int progressCounter,
+            ObjectsModel entities,
+            bool isInError)
         {
             //Update Progress table
             var currentProgress = await _azureService.RetrieveEntityAsync<ProgressEntity>(AppConst.ProgressTable, AppConst.CountProgressPartitionKey, message.ProcessId);
@@ -136,6 +140,14 @@ namespace Count.Functions.MessageHandlers
 
             progress.IsNormalSearchDone = progress.NumberOfNormalObjects == progress.NormalProgress && progress.NormalProgress > 0;
             progress.IsGardenSearchDone = progress.NumberOfGardenObjects == progress.GardenProgress && progress.GardenProgress > 0;
+
+            if (isInError)
+            {
+                if (!progress.InErrorState)
+                {
+                    progress.InErrorState = isInError;
+                }
+            }
 
             await _azureService.InsertOrMergeAsync(AppConst.ProgressTable, progress);
         }

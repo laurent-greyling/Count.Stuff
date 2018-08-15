@@ -39,12 +39,13 @@ namespace Count.Functions.MessageHandlers
             var request = message.IsGardenSearch
                 ? $"{apiUrl}{apiKey}{AppConst.SearchQuery}/tuin/&page={message.ObjectNumber}&pagesize=25"
                 : $"{apiUrl}{apiKey}{AppConst.SearchQuery}&page={message.ObjectNumber}&pagesize=25";
+            var workDetails = new WorkerModel();
 
             try
             {
                 var result = await _restService.GetAsync(request);
-                var workDetails = JsonConvert.DeserializeObject<WorkerModel>(result);
-                await LogStartProgressAsync(message.ProcessId, workDetails, message.IsGardenSearch);
+                workDetails = JsonConvert.DeserializeObject<WorkerModel>(result);
+                await LogStartProgressAsync(message.ProcessId, workDetails, message.IsGardenSearch, false);
 
                 for (int countToEnd = 1; countToEnd <= workDetails.Paging.AantalPaginas; countToEnd++)
                 {
@@ -59,6 +60,7 @@ namespace Count.Functions.MessageHandlers
             }
             catch (Exception ex)
             {
+                await LogStartProgressAsync(message.ProcessId, workDetails, message.IsGardenSearch, true);
                 //TODO: Need to log something here, or send message back to client to inform of failure
                 //Would preferably log exceptions into Application Insights. This will allow us to query AI and 
                 //see what went wrong on any given day. As AI cost a bit of money, I did not create this resource in Azure
@@ -177,7 +179,10 @@ namespace Count.Functions.MessageHandlers
         /// <param name="workerModel"></param>
         /// <param name="isGardenSearch"></param>
         /// <returns></returns>
-        private async Task LogStartProgressAsync(string processId, WorkerModel workerModel, bool isGardenSearch)
+        private async Task LogStartProgressAsync(string processId,
+            WorkerModel workerModel,
+            bool isGardenSearch,
+            bool isError)
         {
             //This is to check if an already existing process has started/completed for specific process.
             //This is also to gaurd against resetting the normal process once garden process starts
@@ -195,7 +200,8 @@ namespace Count.Functions.MessageHandlers
                 NormalProgress = progress == null ? 0 : progress.NormalProgress,
                 GardenProgress = progress == null ? 0 : progress.GardenProgress,
                 NumberOfNormalObjects = progress == null ? workerModel.TotaalAantalObjecten : progress.NumberOfNormalObjects,
-                NumberOfGardenObjects = isGardenSearch ? workerModel.TotaalAantalObjecten : 0
+                NumberOfGardenObjects = isGardenSearch ? workerModel.TotaalAantalObjecten : 0,
+                InErrorState = isError
             };
 
             await _azureService.InsertOrMergeAsync(AppConst.ProgressTable, entity);

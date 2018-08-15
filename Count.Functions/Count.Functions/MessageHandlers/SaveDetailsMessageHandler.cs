@@ -75,7 +75,6 @@ namespace Count.Functions.MessageHandlers
             progress.GardenProgress = message.IsGardenSearch ? progress.GardenProgress + progressCounter : progress.GardenProgress;
 
             //Update this so if someone added or removed and object the count will still match up at end to indigate process have completed
-            //this does not safegaurd against something removed once already iterated over.
             progress.NumberOfNormalObjects = message.IsGardenSearch ? progress.NumberOfNormalObjects : entities.TotaalAantalObjecten;
             progress.NumberOfGardenObjects = message.IsGardenSearch ? entities.TotaalAantalObjecten : progress.NumberOfGardenObjects;
 

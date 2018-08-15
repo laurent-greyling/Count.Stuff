@@ -1,18 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Count.Stuff.ProcessPage">
+             x:Class="Count.Stuff.ProcessPage"
+             Title="Search Status">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Icon="refreshbutton.png" Clicked="Refresh_Status" Priority="0"/>
+    </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="Loading" IsVisible="{Binding Progress.IsNotCompleted}"/>
-            <Label Text="{Binding Progress.Result.IsNormalSearchDone}"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" 
-                   IsVisible="{Binding Progress.IsSuccessfullyCompleted}"/>
-            <Label Text="{Binding Progress.Result.IsGardenSearchDone}"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand"
-                   IsVisible="{Binding Progress.IsSuccessfullyCompleted}"/>
+            <ActivityIndicator IsRunning="True" IsVisible="{Binding Progress.IsNotCompleted}"/>
+            <StackLayout Orientation="Horizontal">
+                <Button Text="Top 10 Overall"
+                        VerticalOptions="CenterAndExpand"
+                        IsVisible="{Binding Progress.IsSuccessfullyCompleted}"
+                        IsEnabled="{Binding Progress.Result.IsNormalSearchDone}"/>
+                <Button Text="Top 10 Garden"
+                        VerticalOptions="CenterAndExpand"
+                        IsVisible="{Binding Progress.IsSuccessfullyCompleted}"
+                        IsEnabled="{Binding Progress.Result.IsGardenSearchDone}"/>
+            </StackLayout>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

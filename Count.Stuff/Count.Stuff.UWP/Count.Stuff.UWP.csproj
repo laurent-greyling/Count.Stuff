@@ -133,6 +133,7 @@
     <Content Include="Assets\Wide310x150Logo.scale-400.png" />
     <Content Include="plus.png" />
     <Content Include="Properties\Default.rd.xml" />
+    <Content Include="refreshbutton.png" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">

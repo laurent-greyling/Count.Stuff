@@ -9,15 +9,18 @@
     <ContentPage.Content>
         <StackLayout>
             <ActivityIndicator IsRunning="True" IsVisible="{Binding Progress.IsNotCompleted}"/>
+            <Label Text="Once your process has completed you will be able to view the top results. You can patiently wait here, or do something else until we are done."/>
             <StackLayout Orientation="Horizontal">
                 <Button Text="Top 10 Overall"
                         VerticalOptions="CenterAndExpand"
                         IsVisible="{Binding Progress.IsSuccessfullyCompleted}"
-                        IsEnabled="{Binding Progress.Result.IsNormalSearchDone}"/>
+                        IsEnabled="{Binding Progress.Result.IsNormalSearchDone}"
+                        Clicked="Overall_Results"/>
                 <Button Text="Top 10 Garden"
                         VerticalOptions="CenterAndExpand"
                         IsVisible="{Binding Progress.IsSuccessfullyCompleted}"
-                        IsEnabled="{Binding Progress.Result.IsGardenSearchDone}"/>
+                        IsEnabled="{Binding Progress.Result.IsGardenSearchDone}"
+                        Clicked="Garden_Results"/>
             </StackLayout>
         </StackLayout>
     </ContentPage.Content>

@@ -40,7 +40,7 @@ namespace Count.Stuff.ViewModels
         {
             _azure = DependencyService.Get<IAzureService>();
 
-            Progress = new NotifyTaskCompletion<ProgressEntity>(_azure.RetrieveEntityAsync<ProgressEntity>(AppConst.ProgressTable, AppConst.CountProgressPartitionKey, processId));
+            _progress = new NotifyTaskCompletion<ProgressEntity>(_azure.RetrieveEntityAsync<ProgressEntity>(AppConst.ProgressTable, AppConst.CountProgressPartitionKey, processId));
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

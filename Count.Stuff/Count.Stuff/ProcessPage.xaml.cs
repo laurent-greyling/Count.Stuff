@@ -1,5 +1,6 @@
 ﻿using Count.Stuff.Helpers;
 using Count.Stuff.ViewModels;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -24,6 +25,16 @@ namespace Count.Stuff
         {
             Progress = new GetProgressViewModel(_processId);
             BindingContext = Progress;
+        }
+
+        private async Task Overall_Results()
+        {
+            await Navigation.PushAsync(new TopResultsPage(_processId, false));
+        }
+
+        private async Task Garden_Results()
+        {
+            await Navigation.PushAsync(new TopResultsPage(_processId, true));
         }
     }
 }

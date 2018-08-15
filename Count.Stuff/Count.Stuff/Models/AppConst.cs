@@ -15,5 +15,10 @@
         public const string ProgressTable = "progress";
 
         public const string CountProgressPartitionKey = "CountProgress";
+
+        /// <summary>
+        /// Table to log the number of times an agent is present in search
+        /// </summary>
+        public const string AgentsTable = "agents";
     }
 }

@@ -16,6 +16,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Entities\AgentsEntity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Entities\ProcessEntity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Entities\ProgressEntity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\NotifyTaskCompletion.cs" />
@@ -38,12 +39,23 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\ISqliteService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\RestCall.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\SqliteService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TopResultsPage.xaml.cs">
+      <DependentUpon>TopResultsPage.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\CreateProcessViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\GetProcessListViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\GetProgressViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\GetTopResultsViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)ProcessPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)TopResultsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </EmbeddedResource>

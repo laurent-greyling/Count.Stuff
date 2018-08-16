@@ -53,5 +53,25 @@ namespace Count.Stuff
         {
             await Navigation.PushAsync(new TopResultsPage(_processId, true));
         }
+
+        /// <summary>
+        /// Check progress table for error state and display if inerror is true
+        /// </summary>
+        /// <returns></returns>
+        private async Task Check_Errors()
+        {
+            if (Progress == null || Progress.Progress.IsNotCompleted)
+            {
+                return;
+            }
+
+            if (Progress.Progress.IsSuccessfullyCompleted)
+            {
+                if (Progress.Progress.Result.InErrorState)
+                {
+                    await DisplayAlert("Error", "There was an error in processing the results. It is recommended that you create a new process as this process may contain inaccurate results or no results at all", "Ok");
+                }
+            }
+        }
     }
 }

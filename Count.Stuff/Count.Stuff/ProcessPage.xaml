@@ -8,21 +8,9 @@
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <StackLayout>
-            <ActivityIndicator IsRunning="True" IsVisible="{Binding Progress.IsNotCompleted}"/>
+            <ActivityIndicator IsRunning="True" IsVisible="{Binding Progress.IsNotCompleted}" PropertyChanged="Check_Errors"/>
             <Label Text="Once your process has completed you will be able to view the top results. You can patiently wait here, or do something else until we are done."
                    IsVisible="{Binding Progress.IsSuccessfullyCompleted}"/>
-            <Label Text="There was an error in processing the results. It is recommended that you create a new process as this process may contain inaccurate results or no results at all"
-                   IsVisible="{Binding Progress.IsSuccessfullyCompleted}">
-                <Label.Triggers>
-                    <MultiTrigger TargetType="Label">
-                        <MultiTrigger.Conditions>
-                            <BindingCondition Binding="{Binding Progress.Result.InErrorState}"
-                                              Value="false"/>
-                        </MultiTrigger.Conditions>
-                        <Setter Property="IsVisible" Value="False"/>
-                    </MultiTrigger>
-                </Label.Triggers>
-            </Label>
             <StackLayout Orientation="Horizontal">
                 <Button Text="Top 10 Overall"
                         VerticalOptions="CenterAndExpand"

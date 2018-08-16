@@ -26,5 +26,15 @@
         public const string AgentsTable = "agents";
 
         public const string CountProgressPartitionKey = "CountProgress";
+
+        /// <summary>
+        /// container to be used for lease activity
+        /// </summary>
+        public const string LeaseBlobContainer = "leasecontainer";
+
+        /// <summary>
+        /// blob to be used to acquire lease
+        /// </summary>
+        public const string LeaseBlob = "leaseblob.txt";
     }
 }

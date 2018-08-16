@@ -1,4 +1,5 @@
 ﻿
+using Count.Functions.Models;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Queue;
 using Microsoft.WindowsAzure.Storage.Table;
@@ -62,6 +63,33 @@ namespace Count.Functions.Services
 
             var cloudMessage = new CloudQueueMessage(message);
             await queue.AddMessageAsync(cloudMessage).ConfigureAwait(false);
+        }
+
+        public async Task<string> AcquireLeaseIdAsync()
+        {
+            var blobClient = _account.CreateCloudBlobClient();
+            var container = blobClient.GetContainerReference(AppConst.LeaseBlobContainer);
+            var blob = container.GetBlockBlobReference(AppConst.LeaseBlob);
+            var leaseId = string.Empty;
+            try
+            {
+                leaseId = await blob.AcquireLeaseAsync(TimeSpan.FromSeconds(16));
+            }
+            catch (Exception)
+            {
+                await blob.ReleaseLeaseAsync(AccessCondition.GenerateLeaseCondition(leaseId));
+                leaseId = await blob.AcquireLeaseAsync(TimeSpan.FromSeconds(16));
+            }
+
+            return leaseId;
+        }
+        public async Task ReleaseLeaseAsync(string leaseId)
+        {
+            var blobClient = _account.CreateCloudBlobClient();
+            var container = blobClient.GetContainerReference(AppConst.LeaseBlobContainer);
+            var blob = container.GetBlockBlobReference(AppConst.LeaseBlob);
+
+            await blob.ReleaseLeaseAsync(AccessCondition.GenerateLeaseCondition(leaseId));
         }
     }
 }

@@ -37,5 +37,16 @@ namespace Count.Functions.Services
         /// <param name="message"></param>
         /// <returns></returns>
         Task<TableResult> RetrieveEntityAsync<T>(string tableName, string partitionKey, string rowKey) where T : ITableEntity;
+
+        /// <summary>
+        /// Get a blob lease in order to manage concurrency in table storage for paralell operations
+        /// </summary>
+        /// <returns></returns>
+        Task<string> AcquireLeaseIdAsync();
+
+        /// <summary>
+        /// release the blob lease
+        /// </summary>
+        Task ReleaseLeaseAsync(string leaseId);
     }
 }

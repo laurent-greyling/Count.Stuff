@@ -5,10 +5,11 @@
     "visibilityTimeout": "00:00:05",
     // The number of queue messages to retrieve and process in
     // parallel (per job function). The default is 16 and the maximum is 32.
-    "batchSize": 1,
+    "batchSize": 4,
     // The number of times to try processing a message before
     // moving it to the poison queue. The default is 5.
     //Dont want this bigger for now as we have no code to mitigate duplicate insertion
-    "maxDequeueCount": 1
+    "maxDequeueCount": 1,
+    "newBatchThreshold": 2
   }
 }

@@ -38,6 +38,8 @@ namespace Count.Functions.MessageHandlers
             var entities = new ObjectsModel();
             var isError = false;
 
+            var leaseId = await _azureService.AcquireLeaseIdAsync();
+
             try
             {
                 var result = await _restService.GetAsync(request);
@@ -51,8 +53,8 @@ namespace Count.Functions.MessageHandlers
                     {
                         continue;
                     }
-
-                    await ProcessAgentAsync(item, message);                   
+                    await ProcessAgentAsync(item, message);
+                    
                 }
             }
             catch (Exception ex)
@@ -66,9 +68,11 @@ namespace Count.Functions.MessageHandlers
                 //This is the main reason for not having the functions app retry (see host.json) at this point as there is no current logic to not add duplicates. For now 
                 //we just continue and counts will not be updated, so process will not be seen as finished, but we can handle this on the client side for now.
             }
-
-            //Update Progress table
-            await UpdateProgress(message, progressCounter, entities, isError);
+            finally
+            {
+                await _azureService.ReleaseLeaseAsync(leaseId);
+                await UpdateProgress(message, progressCounter, entities, isError);
+            }
         }
 
         /// <summary>
@@ -97,7 +101,6 @@ namespace Count.Functions.MessageHandlers
                 };
 
                 await _azureService.InsertOrMergeAsync(AppConst.AgentsTable, agent);
-
                 return;
             }
 

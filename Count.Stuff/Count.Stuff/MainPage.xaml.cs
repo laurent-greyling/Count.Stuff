@@ -27,11 +27,19 @@ namespace Count.Stuff
         /// <returns></returns>
         public async Task Add_New_Process()
         {
-            await new CreateProcessViewModel().Create();
+            try
+            {
+                await new CreateProcessViewModel().Create();
 
-            ProcessIds = new GetProcessListViewModel();
+                ProcessIds = new GetProcessListViewModel();
 
-            BindingContext = ProcessIds;
+                BindingContext = ProcessIds;
+            }
+            catch (System.Exception)
+            {
+                //This will be triggered most of the time if you forgot your connection string...
+                await DisplayAlert("Error", "Oeps, could not create process, try again please", "Ok");
+            }
         }
 
         /// <summary>

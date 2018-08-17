@@ -70,7 +70,7 @@ This table contain the following info:
 - NormalCount - Overall times this agent appeared
 
 ## Setup needed
-This app expect a few things to be in place before you can use it. As this is an Azure app, it expects some azure services to be in place. These were manually created for this excersise, but usually these resources will be setup by your ARM template as part of your deployment process.
+This app expects a few things to be in place before you can use it. As this is an Azure app, it expects some azure services to be in place. These were manually created for this exercise, but usually these resources will be setup by your ARM template as part of your deployment process.
 
 Resources that need to be in place:
 

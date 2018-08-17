@@ -58,7 +58,7 @@ namespace Count.Functions.MessageHandlers
                     await SendSearchCriteriaMessage(message.ProcessId);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 await LogStartProgressAsync(message.ProcessId, workDetails, message.IsGardenSearch, true);
                 //Would preferably log exceptions into Application Insights. This will allow us to query AI and 

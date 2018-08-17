@@ -25,7 +25,7 @@ namespace Count.Stuff
         /// Add process to the list and start counting function
         /// </summary>
         /// <returns></returns>
-        public async Task Add_New_Process()
+        private async Task Add_New_Process()
         {
             try
             {
@@ -48,7 +48,7 @@ namespace Count.Stuff
         /// <param name="sender"></param>
         /// <param name="e"></param>
         /// <returns></returns>
-        public async Task Navigate_To_Process(object sender, ItemTappedEventArgs e)
+        private async Task Navigate_To_Process(object sender, ItemTappedEventArgs e)
         {
             var item = sender as ListView;
             var selectedItem = item.SelectedItem as ProcessEntity;

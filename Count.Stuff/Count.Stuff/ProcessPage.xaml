@@ -8,19 +8,21 @@
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <StackLayout>
-            <ActivityIndicator IsRunning="True" IsVisible="{Binding Progress.IsNotCompleted}" PropertyChanged="Check_Errors"/>
+            <ActivityIndicator IsRunning="True" IsVisible="{Binding Progress.IsNotCompleted}" PropertyChanged="Check_Progress"/>
             <Label Text="Once your process has completed you will be able to view the top results. You can patiently wait here, or do something else until we are done."
                    IsVisible="{Binding Progress.IsSuccessfullyCompleted}"/>
             <StackLayout Orientation="Horizontal">
-                <Button Text="Top 10 Overall"
+                <Button x:Name="Overall"
+                        Text="Top 10 Overall"
                         VerticalOptions="CenterAndExpand"
                         IsVisible="{Binding Progress.IsSuccessfullyCompleted}"
-                        IsEnabled="{Binding Progress.Result.IsNormalSearchDone}"
+                        IsEnabled="False"
                         Clicked="Overall_Results"/>
-                <Button Text="Top 10 Garden"
+                <Button x:Name="Garden"
+                        Text="Top 10 Garden"
                         VerticalOptions="CenterAndExpand"
                         IsVisible="{Binding Progress.IsSuccessfullyCompleted}"
-                        IsEnabled="{Binding Progress.Result.IsGardenSearchDone}"
+                        IsEnabled="False"
                         Clicked="Garden_Results"/>
             </StackLayout>
         </StackLayout>

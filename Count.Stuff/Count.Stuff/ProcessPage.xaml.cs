@@ -58,7 +58,7 @@ namespace Count.Stuff
         /// Check progress table for error state and display if inerror is true
         /// </summary>
         /// <returns></returns>
-        private async Task Check_Errors()
+        private async Task Check_Progress()
         {
             if (Progress == null || Progress.Progress.IsNotCompleted)
             {
@@ -70,6 +70,16 @@ namespace Count.Stuff
                 if (Progress.Progress.Result.InErrorState)
                 {
                     await DisplayAlert("Error", "There was an error in processing the results. It is recommended that you create a new process as this process may contain inaccurate results or no results at all", "Ok");
+                }
+
+                if (Progress.Progress.Result.IsNormalSearchDone)
+                {
+                    Overall.IsEnabled = true;
+                }
+
+                if (Progress.Progress.Result.IsGardenSearchDone)
+                {
+                    Garden.IsEnabled = true;
                 }
             }
         }

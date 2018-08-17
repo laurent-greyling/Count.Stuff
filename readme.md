@@ -23,7 +23,7 @@ Once the background process has finished the results can be viewed under that sp
 ### Navigate the app
 - start a process by clicking on the `+` symbol in the top right corner
 - a message will be sent to the function app, the function app might take a bit to start if it is asleep. This will mean that the `progress` of this process is not logged yet.
-- once the message is beign processed it will take a few minutes to complete. Press the refresh icon in the top right to refresh. Once the process is completed, press the button for the results you want to view.
+- once the message is being processed it will take a few minutes to complete. Press the refresh icon in the top right to refresh. Once the process is completed, press the button for the results you want to view.
 
 ![progress](https://user-images.githubusercontent.com/17876815/44250899-a4942880-a1f6-11e8-8039-8fd5f360a3bc.gif)
 
